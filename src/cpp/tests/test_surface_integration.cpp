@@ -12,8 +12,6 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 
-typedef errorTools::Node errorNode; //!< Redefinition for the error node
-typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
 typedef surfaceIntegration::floatType floatType; //!< Redefinition for the float type
 typedef surfaceIntegration::floatVector floatVector; //1< Redefinition for the float vector
 typedef surfaceIntegration::floatMatrix floatMatrix; //1< Redefinition for the float matrix
@@ -1060,8 +1058,7 @@ BOOST_AUTO_TEST_CASE( test_integrateMesh ){
 
     BOOST_CHECK( !surfaceIntegration::integrateMesh( points, connectivity, nodalValues, result ) );
 
-    errorOut error = surfaceIntegration::integrateMesh( points, connectivity, nodalValues, result );
-    if ( error ){ error->print( ); }
+    surfaceIntegration::integrateMesh( points, connectivity, nodalValues, result );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 

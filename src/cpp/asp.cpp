@@ -7,7 +7,7 @@
   */
 
 #include<asp.h>
-#include<stress_tools.h>
+#include<tardigrade_stress_tools.h>
 #include<traction_separation.h>
 #include<surface_integration.h>
 
@@ -76,7 +76,7 @@ namespace asp{
          * \param &stateVariables: The updated values of the state variables
          */
 
-        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( tardigradeStressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
 
         return;
 
@@ -108,7 +108,7 @@ namespace asp{
          *     probability density and the previous value.
          */
 
-        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( tardigradeStressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
 
         logProbabilityRatio = 0.;
 
@@ -768,7 +768,7 @@ namespace asp{
 
         const unsigned int *dim = getDimension( );
 
-        setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( vectorTools::inflate( *getGradientMicroDeformation( ), ( *dim ) * ( *dim ), ( *dim ) ) );
+        setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( tardigradeVectorTools::inflate( *getGradientMicroDeformation( ), ( *dim ) * ( *dim ), ( *dim ) ) );
 
     }
 
@@ -929,7 +929,7 @@ namespace asp{
          * non-local relative position vector in the reference configuration
          */
 
-        setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( vectorTools::eye< floatType >( getNonLocalMicroDeformation( )->size( ) ) );
+        setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( tardigradeVectorTools::eye< floatType >( getNonLocalMicroDeformation( )->size( ) ) );
 
     }
 
@@ -987,7 +987,7 @@ namespace asp{
         ERROR_TOOLS_CATCH( dX = getLocalReferenceParticleSpacingVector( ) );
 
         floatVector eye( ( *dim ) * ( *dim ), 0 );
-        vectorTools::eye( eye );
+        tardigradeVectorTools::eye( eye );
 
         floatMatrix value( ( *dim ) * ( *dim ), floatVector( ( *dim ) * ( *dim ) * ( *dim ), 0 ) );
 
@@ -1059,7 +1059,7 @@ namespace asp{
         floatMatrix value( getNonLocalMicroDeformation( )->size( ), floatVector( getLocalSurfaceReferenceRelativePositionVector( )->size( ) * getGradientMicroDeformation( )->size( ), 0 ) );
 
         floatVector eye( ( *dim ) * ( *dim ), 0 );
-        vectorTools::eye( eye );
+        tardigradeVectorTools::eye( eye );
 
         for ( unsigned int i = 0; i < *dim; i++ ){
 
@@ -1320,15 +1320,15 @@ namespace asp{
         setCurrentDistanceVector( currentDistanceVector );
 
         // Set first order derivatives
-        dddXi   += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) );
+        dddXi   += tardigradeVectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) );
 
-        dddXiNL += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ) );
+        dddXiNL += tardigradeVectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ) );
 
-        dddD    += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceDistanceVector( ) );
+        dddD    += tardigradeVectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceDistanceVector( ) );
 
-        floatMatrix dddChiNLBase = vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ) );
+        floatMatrix dddChiNLBase = tardigradeVectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ) );
 
-        floatMatrix dddGradChi = vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdGradientMicroDeformation( ) );
+        floatMatrix dddGradChi = tardigradeVectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdGradientMicroDeformation( ) );
 
         setdCurrentDistanceVectordLocalReferenceRelativePositionVector( dddXi );
 
@@ -2210,13 +2210,13 @@ namespace asp{
         ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, *localReferenceNormal,
                                                                        dan, ddandChi, ddandN ) );
 
-        floatType da = vectorTools::l2norm( dan );
+        floatType da = tardigradeVectorTools::l2norm( dan );
 
         localCurrentNormal = dan / da;
 
-        floatMatrix dndChi = ddandChi / da - vectorTools::dyadic( dan, vectorTools::Tdot( ddandChi, localCurrentNormal ) ) / ( da * da );
+        floatMatrix dndChi = ddandChi / da - tardigradeVectorTools::dyadic( dan, tardigradeVectorTools::Tdot( ddandChi, localCurrentNormal ) ) / ( da * da );
 
-        floatMatrix dndN = ddandN / da - vectorTools::dyadic( dan, vectorTools::Tdot( ddandN, localCurrentNormal ) ) / ( da * da );
+        floatMatrix dndN = ddandN / da - tardigradeVectorTools::dyadic( dan, tardigradeVectorTools::Tdot( ddandN, localCurrentNormal ) ) / ( da * da );
 
         setLocalCurrentNormal( localCurrentNormal );
 
@@ -2364,7 +2364,7 @@ namespace asp{
         localReferenceNormal = floatVector( unitSpherePoints->begin( ) + ( *dim ) * index,
                                             unitSpherePoints->begin( ) + ( *dim ) * ( index + 1 ) );
 
-        localReferenceNormal /= vectorTools::l2norm( localReferenceNormal );
+        localReferenceNormal /= tardigradeVectorTools::l2norm( localReferenceNormal );
 
         return;
 
@@ -2387,7 +2387,7 @@ namespace asp{
         ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, referenceNormal,
                                                                        normal ) );
 
-        normal /= vectorTools::l2norm( normal );
+        normal /= tardigradeVectorTools::l2norm( normal );
 
         return;
 
@@ -2557,7 +2557,7 @@ namespace asp{
         floatType energyDensity;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, *surfaceParameters, energyDensity ) );
 
-        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
+        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * tardigradeVectorTools::l2norm( dn );
 
         return;
 
@@ -2593,45 +2593,45 @@ namespace asp{
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt,
                                                                              ddndd, ddndn, ddtdd, ddtdn ) );
 
-        floatMatrix ddndF = vectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
+        floatMatrix ddndF = tardigradeVectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
 
-        floatMatrix ddndChi = vectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
-                            + vectorTools::dot( ddndn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
+        floatMatrix ddndChi = tardigradeVectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
+                            + tardigradeVectorTools::dot( ddndn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
 
-        floatMatrix ddndGradChi = vectorTools::dot( ddndd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
+        floatMatrix ddndGradChi = tardigradeVectorTools::dot( ddndd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
 
-        floatMatrix ddtdF = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
+        floatMatrix ddtdF = tardigradeVectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
 
-        floatMatrix ddtdChi = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
-                            + vectorTools::dot( ddtdn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
+        floatMatrix ddtdChi = tardigradeVectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
+                            + tardigradeVectorTools::dot( ddtdn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
 
-        floatMatrix ddtdGradChi = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
+        floatMatrix ddtdGradChi = tardigradeVectorTools::dot( ddtdd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
 
         floatType energyDensity;
         floatVector deddn, deddt;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, *surfaceParameters, energyDensity,
                                                                                          deddn, deddt ) );
 
-        floatVector dedF = vectorTools::Tdot( ddndF, deddn )
-                         + vectorTools::Tdot( ddtdF, deddt );
+        floatVector dedF = tardigradeVectorTools::Tdot( ddndF, deddn )
+                         + tardigradeVectorTools::Tdot( ddtdF, deddt );
 
-        floatVector dedChi = vectorTools::Tdot( ddndChi, deddn )
-                           + vectorTools::Tdot( ddtdChi, deddt );
+        floatVector dedChi = tardigradeVectorTools::Tdot( ddndChi, deddn )
+                           + tardigradeVectorTools::Tdot( ddtdChi, deddt );
 
-        floatVector dedGradChi = vectorTools::Tdot( ddndGradChi, deddn )
-                               + vectorTools::Tdot( ddtdGradChi, deddt );
+        floatVector dedGradChi = tardigradeVectorTools::Tdot( ddndGradChi, deddn )
+                               + tardigradeVectorTools::Tdot( ddtdGradChi, deddt );
 
-        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
+        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * tardigradeVectorTools::l2norm( dn );
 
-        floatType dsede = 0.5 * vectorTools::l2norm( dn );
+        floatType dsede = 0.5 * tardigradeVectorTools::l2norm( dn );
 
-        floatVector dseddn = 0.5 * energyDensity * dn / ( vectorTools::l2norm( dn ) + *getAbsoluteTolerance( ) );
+        floatVector dseddn = 0.5 * energyDensity * dn / ( tardigradeVectorTools::l2norm( dn ) + *getAbsoluteTolerance( ) );
 
-        dSurfaceAdhesionEnergyDensitydLocalDeformationGradient = dsede * dedF + vectorTools::Tdot( ddndF, dseddn );
+        dSurfaceAdhesionEnergyDensitydLocalDeformationGradient = dsede * dedF + tardigradeVectorTools::Tdot( ddndF, dseddn );
 
-        dSurfaceAdhesionEnergyDensitydLocalMicroDeformation = dsede * dedChi + vectorTools::Tdot( ddndChi, dseddn );
+        dSurfaceAdhesionEnergyDensitydLocalMicroDeformation = dsede * dedChi + tardigradeVectorTools::Tdot( ddndChi, dseddn );
 
-        dSurfaceAdhesionEnergyDensitydGradientMicroDeformation = dsede * dedGradChi + vectorTools::Tdot( ddndGradChi, dseddn );
+        dSurfaceAdhesionEnergyDensitydGradientMicroDeformation = dsede * dedGradChi + tardigradeVectorTools::Tdot( ddndGradChi, dseddn );
 
     }
 
@@ -2725,7 +2725,7 @@ namespace asp{
 
             getLocalCurrentNormal( overlap->first, normal );
 
-            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * vectorTools::dot( overlap->second, overlap->second ) * std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
+            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * tardigradeVectorTools::dot( overlap->second, overlap->second ) * std::fabs( tardigradeVectorTools::dot( overlap->second, normal ) ) } );
 
         }
 
@@ -3260,7 +3260,7 @@ namespace asp{
 
         floatVector localCurrentSurfacePoints;
 
-        ERROR_TOOLS_CATCH( localCurrentSurfacePoints = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
+        ERROR_TOOLS_CATCH( localCurrentSurfacePoints = tardigradeVectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
                                                                                     localReferenceSurfacePoints->size( ) / ( *dim ), *dim, *dim, *dim, false, true ) );
 
         setLocalCurrentSurfacePoints( localCurrentSurfacePoints );
@@ -3312,7 +3312,7 @@ namespace asp{
 
         floatVector nonLocalCurrentSurfacePoints;
 
-        ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
+        ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = tardigradeVectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
                                                                                        nonLocalReferenceSurfacePoints->size( ) / ( *dim ),
                                                                                                *dim, *dim, *dim, false, true ) );
 
@@ -3564,7 +3564,7 @@ namespace asp{
         floatVector dn, dt;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt ) );
 
-        setSurfaceAdhesionThickness( vectorTools::l2norm( dn ) );
+        setSurfaceAdhesionThickness( tardigradeVectorTools::l2norm( dn ) );
 
     }
 
@@ -3614,7 +3614,7 @@ namespace asp{
 
             ERROR_TOOLS_CATCH( getLocalCurrentNormal( overlap->first, normal ) );
         
-            surfaceOverlapThickness.insert( { overlap->first, std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
+            surfaceOverlapThickness.insert( { overlap->first, std::fabs( tardigradeVectorTools::dot( overlap->second, normal ) ) } );
 
         }
 
@@ -4169,7 +4169,7 @@ namespace asp{
         ERROR_TOOLS_CATCH( referenceVolume = getLocalParticleReferenceVolume( ) );
 
         floatType J;
-        ERROR_TOOLS_CATCH( J = vectorTools::determinant( *microDeformation, ( *dim ), ( *dim ) ) );
+        ERROR_TOOLS_CATCH( J = tardigradeVectorTools::determinant( *microDeformation, ( *dim ), ( *dim ) ) );
 
         floatType currentVolume = J * ( *referenceVolume );
 
@@ -4452,23 +4452,20 @@ namespace asp{
 
     /// Say hello
     /// @param message The message to print
-    errorOut sayHello( std::string message ) {
-        if ( message.compare( "George" ) == 0 ){
-            errorOut result = new errorNode( __func__, "ERROR: George is a wolf in sheep's clothing!");
-            return result;
-        }
+    void sayHello( std::string message ) {
+        TARDIGRADE_ERROR_TOOLS_CHECK( message.compare( "George" ) != 0, "ERROR: George is a wolf in sheep's clothing!" );
         std::cout << "Hello " << message << std::endl;
         return NULL;
     }
 
-    errorOut dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
-                                 floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
-                                 const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
-                                 const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,
-                                 const int &NSHR,                 const int &NTENS,           const int &NSTATV,         const floatVector &props,  const int &NPROPS,
-                                 const floatVector &coords,       const floatMatrix &drot,    floatType &PNEWDT,         const floatType &CELENT,   const floatMatrix &dfgrd0,
-                                 const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
-                                 const std::vector< int > &jstep, const int &KINC ){
+    void dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
+                             floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
+                             const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
+                             const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,
+                             const int &NSHR,                 const int &NTENS,           const int &NSTATV,         const floatVector &props,  const int &NPROPS,
+                             const floatVector &coords,       const floatMatrix &drot,    floatType &PNEWDT,         const floatType &CELENT,   const floatMatrix &dfgrd0,
+                             const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
+                             const std::vector< int > &jstep, const int &KINC ){
         /*!
          * A template Abaqus c++ UMAT using c++ STL types. Variables in all caps reference ABAQUS FORTRAN
          * memory directly. Variables in lower case are native c++ type conversions stored separately from the original
@@ -4476,16 +4473,9 @@ namespace asp{
          */
 
         //Call functions of constitutive model to do things
-        errorOut error = sayHello( "Abaqus" );
+        TARDIGRADE_ERROR_TOOLS_CATCH( sayHello( "Abaqus" ) );
 
-        //Error handling
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when calling sayHello" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
+        return void;
     }
 
     void abaqusInterface( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
@@ -4500,9 +4490,6 @@ namespace asp{
          * A template Abaqus UMAT c++ interface that performs Fortran to C++ type conversions, calculates the material
          * model's expected input, handles tensor shape changes, and calls a c++ material model.
          */
-
-        //Initialize error return codes
-        errorOut error = NULL;
 
         //Provide a variable string message for error nodes
         std::ostringstream message;
@@ -4547,26 +4534,24 @@ namespace asp{
 
         //Call the constitutive model c++ interface
         if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
-            error = dummyMaterialModel( stress, statev,  ddsdde, SSE,    SPD,
-                                        SCD,    RPL,     ddsddt, drplde, DRPLDT,
-                                        strain, dstrain, time,   DTIME,  TEMP,
-                                        DTEMP,  predef,  dpred,  cmname, NDI,
-                                        NSHR,   NTENS,   NSTATV, props,  NPROPS,
-                                        coords, drot,    PNEWDT, CELENT, dfgrd0,
-                                        dfgrd1, NOEL,    NPT,    LAYER,  KSPT,
-                                        jstep,  KINC );
-        }
+            try{
+                dummyMaterialModel( stress, statev,  ddsdde, SSE,    SPD,
+                                    SCD,    RPL,     ddsddt, drplde, DRPLDT,
+                                    strain, dstrain, time,   DTIME,  TEMP,
+                                    DTEMP,  predef,  dpred,  cmname, NDI,
+                                    NSHR,   NTENS,   NSTATV, props,  NPROPS,
+                                    coords, drot,    PNEWDT, CELENT, dfgrd0,
+                                    dfgrd1, NOEL,    NPT,    LAYER,  KSPT,
+                                    jstep,  KINC );
+            }
+            catch(std::exception e){
 
-        //Error handling
-        if ( error ){
-            message.clear();
-            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": Error when calling dummyMaterialModel.";
-            errorOut result = new errorNode( __func__, message.str( ) );
-            result->addNext( error );
-            error->print( true );
-            //If an error was thrown, but the ratio of new/current time increment is not updated, it was a fatal error.
-            if ( vectorTools::fuzzyEquals( PNEWDT, 1. ) ){
-                throw std::runtime_error( message.str( ) );
+                if ( tardigradeVectorTools::fuzzyEquals( PNEWDT, 1. ) ){
+
+                    throw e;
+
+                }
+
             }
         }
 

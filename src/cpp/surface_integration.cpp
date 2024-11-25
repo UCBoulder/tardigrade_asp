@@ -3,7 +3,7 @@
 
 namespace surfaceIntegration{
 
-    errorOut decomposeSphere( const floatType &radius, const unsigned int &elementCount,
+    void decomposeSphere( const floatType &radius, const unsigned int &elementCount,
                               floatVector &points, std::vector<unsigned int> &connectivity ){
         /*!
          * Decompose a sphere into quadratic elements for use in numeric integration
@@ -25,16 +25,9 @@ namespace surfaceIntegration{
          * \param &connectivity: The connectivity array for the elements (e1_1, e1_2, e1_3, e1_4, e1_5, e1_6, e1_7, e1_8, e1_9, e2_1, ...
          */
 
-        errorOut error;
-
         // Form the base structure of the sphere
         floatVector cubePoints;
-        error = formBaseCubePoints( elementCount, cubePoints );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error in the formation of the base cube" );
-            result->addNext( error );
-            return error;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formBaseCubePoints( elementCount, cubePoints ) );
 
         // Re-scale the points to be a sphere
         points = floatVector( cubePoints.size( ), 0 );
@@ -55,18 +48,13 @@ namespace surfaceIntegration{
         }
 
         // From the connectivity
-        error = formCubeConnectivity( elementCount, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error in the formation of the base cube connectivity" );
-            result->addNext( error );
-            return error;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formCubeConnectivity( elementCount, connectivity ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut buildSurfacePoints( const floatType &x0, const floatType &y0, const floatType &z0,
+    void buildSurfacePoints( const floatType &x0, const floatType &y0, const floatType &z0,
                                  const floatType &dx, const floatType &dy,
                                  const unsigned int n_points_x, const unsigned int n_points_y,
                                  floatVector &points ){
@@ -111,11 +99,11 @@ namespace surfaceIntegration{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut rotatePoints( const floatVector &points,
+    void rotatePoints( const floatVector &points,
                            const floatType &thetaX, const floatType &thetaY, const floatType &thetaZ,
                            floatVector &rotatedPoints ){
         /*!
@@ -181,11 +169,11 @@ namespace surfaceIntegration{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut formSurfaceConnectivity( const std::vector< unsigned int > &surfaceIDs,
+    void formSurfaceConnectivity( const std::vector< unsigned int > &surfaceIDs,
                                       const unsigned int &n_elements_x, const unsigned int &n_elements_y,
                                       unsigned int &index, std::vector< unsigned int > &connectivity ){
         /*!
@@ -228,11 +216,11 @@ namespace surfaceIntegration{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut formBaseCubePoints( const unsigned int &elementCount, floatVector &points ){
+    void formBaseCubePoints( const unsigned int &elementCount, floatVector &points ){
         /*!
          * Form the base cube points which will be used for integration using quadratic elements
          * 
@@ -240,7 +228,6 @@ namespace surfaceIntegration{
          * \param &points: The resulting points
          */
 
-        errorOut error = NULL;
         floatType pi = 3.141592653589793;
         unsigned int n_points_edge = 2 * elementCount + 1;
 
@@ -253,123 +240,46 @@ namespace surfaceIntegration{
 
         // Build the top surface
         floatVector top_points;
-        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, top_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when building the top surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, top_points ) );
 
         // Build the back surface
         floatVector temp;
         floatVector back_points;
-        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
-        if ( error ){
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp ) );
 
-            errorOut result = new errorNode( __func__, "Error when building the back surface" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        error = rotatePoints( temp, -0.5 * pi, 0, 0, back_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when rotating the back surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( rotatePoints( temp, -0.5 * pi, 0, 0, back_points ) );
 
         // Build the bottom surface
         floatVector bottom_points;
-        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
-        if ( error ){
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp ) );
 
-            errorOut result = new errorNode( __func__, "Error when building the bottom surface" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        error = rotatePoints( temp, -pi, 0, 0, bottom_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when rotating the bottom surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( rotatePoints( temp, -pi, 0, 0, bottom_points ) );
 
         // Build the front surface
         floatVector front_points;
-        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
-        if ( error ){
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp ) );
 
-            errorOut result = new errorNode( __func__, "Error when building the front surface" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        error = rotatePoints( temp, -1.5 * pi, 0, 0, front_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when rotating the front surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( rotatePoints( temp, -1.5 * pi, 0, 0, front_points ) );
 
         // Build the right surface
         floatVector right_points;
-        error = buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp );
-        if ( error ){
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp ) );
 
-            errorOut result = new errorNode( __func__, "Error when building the right surface" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        error = rotatePoints( temp, 0, 0.5 * pi, 0, right_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when rotating the right surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( rotatePoints( temp, 0, 0.5 * pi, 0, right_points ) );
 
         // Build the left surface
         floatVector left_points;
-        error = buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp );
-        if ( error ){
+        TARDIGRADE_ERROR_TOOLS_CATCH( buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp ) );
 
-            errorOut result = new errorNode( __func__, "Error when building the left surface" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        error = rotatePoints( temp, 0, -0.5 * pi, 0, left_points );
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error when rotating the left surface" );
-            result->addNext( error );
-            return result;
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( rotatePoints( temp, 0, -0.5 * pi, 0, left_points ) );
 
         points = vectorTools::appendVectors( { top_points, back_points, bottom_points, front_points, right_points, left_points } );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut formCubeConnectivity( const unsigned int &elementCount, std::vector< unsigned int > &connectivity ){
+    void formCubeConnectivity( const unsigned int &elementCount, std::vector< unsigned int > &connectivity ){
         /*!
          * Form the connectivity vector for the base cube defined through formBaseCubePoints
          * 
@@ -378,7 +288,6 @@ namespace surfaceIntegration{
          */
 
         connectivity = std::vector< unsigned int >( 9 * 6 * elementCount * elementCount );
-        errorOut error;
 
         unsigned int n_points_edge = 2 * elementCount + 1;
 
@@ -387,40 +296,20 @@ namespace surfaceIntegration{
         // Define the top surface connectivity
         std::vector< unsigned int > surfaceIDs( n_points_edge * n_points_edge );
         std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), 0 );
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
         // Define the back surface connectivity
         std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), n_points_edge * ( n_points_edge - 1 ) );
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
         // Define the bottom surface connectivity
         std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), 2 * n_points_edge * ( n_points_edge - 1 ) );
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
         // Define the front surface connectivity
         std::iota( surfaceIDs.begin( ), surfaceIDs.end( ) - n_points_edge, 3 * n_points_edge * ( n_points_edge - 1 ) );
         std::iota( surfaceIDs.end( ) - n_points_edge, surfaceIDs.end( ), 0 );
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
         // Define the right surface connectivity
         unsigned int offset = 4 * n_points_edge * ( n_points_edge - 1 ) - 1;
@@ -469,12 +358,7 @@ namespace surfaceIntegration{
             surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + n_points_edge - 1 ] = right_edge[ i ];
 
         }
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the right surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
         // Define the left surface connectivity
         offset = 3 * n_points_edge * ( n_points_edge - 1 );
@@ -518,18 +402,13 @@ namespace surfaceIntegration{
             surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + n_points_edge - 1 ] = right_edge[ i ];
 
         }
-        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when building the connectivity of the left surface" );
-            result->addNext( error );
-            return result;
-        }
+        TARDIGRADE_ERROR_TOOLS_CATCH( formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut evaluateQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatVector &shapeFunctions ){
+    void evaluateQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatVector &shapeFunctions ){
         /*!
          * Evaluate the shape functions of a quadratic element
          * 
@@ -568,11 +447,11 @@ namespace surfaceIntegration{
         // Center node
         shapeFunctions[ 8 ] = ( 1 - xi * xi) * ( 1 - eta * eta );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions ){
+    void evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions ){
         /*!
          * Evaluate the gradient of the shape functions w.r.t. the local coordinates
          * 
@@ -623,11 +502,11 @@ namespace surfaceIntegration{
         gradShapeFunctions[ 8 ][ 0 ] = -2 * xi * (1 - eta * eta);
         gradShapeFunctions[ 8 ][ 1 ] = -2 * (1 - xi * xi) * eta;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut interpolateFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatVector &answer ){
+    void interpolateFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatVector &answer ){
         /*!
          * Interpolate a function using the quadratic shape functions
          * 
@@ -639,38 +518,19 @@ namespace surfaceIntegration{
 
         floatVector Ns;
 
-        errorOut error;
+        TARDIGRADE_ERROR_TOOLS_CATCH( evaluateQuadraticShapeFunctions( xi, eta, Ns ) );
 
-        error = evaluateQuadraticShapeFunctions( xi, eta, Ns );
+        TARDIGRADE_ERROR_TOOLS_CHECK( nodalValues.size( ) >= 1, "The nodal values have no entries." );
 
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        if ( nodalValues.size( ) < 1 ){
-
-            return new errorNode( __func__, "The nodal values have no entries." );
-
-        }
-
-        if ( nodalValues[ 0 ].size( ) != Ns.size( ) ){
-
-            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( Ns.size( ) );
-            return new errorNode( __func__, message );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( nodalValues[ 0 ].size( ) == Ns.size( ), "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( Ns.size( ) ) );
 
         answer = vectorTools::dot( nodalValues, Ns );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut localGradientFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatMatrix &answer ){
+    void localGradientFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatMatrix &answer ){
         /*!
          * Compute the gradient of the interpolated function w.r.t. the local coordinates
          * 
@@ -682,38 +542,19 @@ namespace surfaceIntegration{
 
         floatMatrix dNdxi;
 
-        errorOut error;
+        TARDIGRADE_ERROR_TOOLS_CATCH( evaluateGradQuadraticShapeFunctions( xi, eta, dNdxi ) );
 
-        error = evaluateGradQuadraticShapeFunctions( xi, eta, dNdxi );
+        TARDIGRADE_ERROR_TOOLS_CHECK( nodalValues.size( ) >= 1, "The nodal values have no entries." );
 
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        if ( nodalValues.size( ) < 1 ){
-
-            return new errorNode( __func__, "The nodal values have no entries." );
-
-        }
-
-        if ( nodalValues[ 0 ].size( ) != dNdxi.size( ) ){
-
-            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( dNdxi.size( ) );
-            return new errorNode( __func__, message );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( nodalValues[ 0 ].size( ) == dNdxi.size( ), "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( dNdxi.size( ) ) );
 
         answer = vectorTools::dot( nodalValues, dNdxi );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut localJacobian( const floatType &xi, const floatType &eta, const floatMatrix &nodalPositions, floatType &jacobian ){
+    void localJacobian( const floatType &xi, const floatType &eta, const floatMatrix &nodalPositions, floatType &jacobian ){
         /*!
          * Compute the local jacobian of the quadratic element
          * 
@@ -725,23 +566,9 @@ namespace surfaceIntegration{
 
         floatMatrix dxdxi;
 
-        errorOut error;
+        TARDIGRADE_ERROR_TOOLS_CATCH( localGradientFunction( xi, eta, nodalPositions, dxdxi ) );
 
-        error = localGradientFunction( xi, eta, nodalPositions, dxdxi );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the local gradient" );
-            result->addNext( error );
-            return result;
-
-        }
-
-        if ( dxdxi.size( ) != 3 ){
-
-            return new errorNode( __func__, "The nodal positions should be in 3d but are of dimension " + std::to_string( dxdxi.size( ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( dxdxi.size( ) == 3, "The nodal positions should be in 3d but are of dimension " + std::to_string( dxdxi.size( ) ) );
 
         floatVector cross_product = { dxdxi[ 1 ][ 0 ] * dxdxi[ 2 ][ 1 ] - dxdxi[ 2 ][ 0 ] * dxdxi[ 1 ][ 1 ],
                                       dxdxi[ 2 ][ 0 ] * dxdxi[ 0 ][ 1 ] - dxdxi[ 0 ][ 0 ] * dxdxi[ 2 ][ 1 ],
@@ -749,11 +576,11 @@ namespace surfaceIntegration{
 
         jacobian = vectorTools::l2norm( cross_product );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer ){
+    void integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer ){
         /*!
          * Integrate a function over a quadratic element
          * 
@@ -761,8 +588,6 @@ namespace surfaceIntegration{
          * \param &nodalValues: The values of the function at the nodes (dim function x 9)
          * \param &answer: The resulting integrated function
          */
-
-        errorOut error;
 
         floatVector gaussPoints_1D = { -1. / std::sqrt( 3 ), 1. / std::sqrt( 3 ) };
 
@@ -784,25 +609,9 @@ namespace surfaceIntegration{
 
                 w = weights[ i ] * weights[ j ];
 
-                error = localJacobian( xi, eta, nodalPositions, jac );
+                TARDIGRADE_ERROR_TOOLS_CATCH( localJacobian( xi, eta, nodalPositions, jac ) );
 
-                if ( error ){
-
-                    errorOut result = new errorNode( __func__, "Error when computing the local jacobian" );
-                    result->addNext( error );
-                    return result;
-
-                }
-
-                error = interpolateFunction( xi, eta, nodalValues, val );
-
-                if ( error ){
-
-                    errorOut result = new errorNode( __func__, "Error when interpolating the function" );
-                    result->addNext( error );
-                    return result;
-
-                }
+                TARDIGRADE_ERROR_TOOLS_CATCH( interpolateFunction( xi, eta, nodalValues, val ) );
 
                 answer += val * w * jac;
 
@@ -810,11 +619,11 @@ namespace surfaceIntegration{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut integrateMesh( const floatVector &nodalPositions, const std::vector< unsigned int > &connectivity,
+    void integrateMesh( const floatVector &nodalPositions, const std::vector< unsigned int > &connectivity,
                             const floatVector &nodalValues, floatVector &answer ){
         /*!
          * Integrate the provided function over a full mesh
@@ -825,35 +634,21 @@ namespace surfaceIntegration{
          * \param &answer: The resulting integrated function
          */
 
-        errorOut error;
-
         unsigned int dim = 3;
 
         unsigned int n_nodes = 9;
 
         unsigned int n_points = nodalPositions.size( ) / dim;
 
-        if ( n_points * dim != nodalPositions.size( ) ){
-
-            return new errorNode( __func__, "The nodal positions size is not a multiple of three" );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( n_points * dim == nodalPositions.size( ), "The nodal positions size is not a multiple of three" );
 
         unsigned int n_elements = connectivity.size( ) / n_nodes;
 
-        if ( n_elements * n_nodes != connectivity.size( ) ){
-
-            return new errorNode( __func__, "The connectivity size is not a multiple of nine" );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( n_elements * n_nodes == connectivity.size( ), "The connectivity size is not a multiple of nine" );
 
         unsigned int function_dim = nodalValues.size( ) / n_points;
 
-        if ( function_dim * n_points != nodalValues.size( ) ){
-
-            return new errorNode( __func__, "The nodal values size is not a multiple of nine" );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( function_dim * n_points != nodalValues.size( ), "The nodal values size is not a multiple of nine" );
 
         floatMatrix nodalPositions_e( dim, floatVector( n_nodes, 0 ) );
 
@@ -883,21 +678,13 @@ namespace surfaceIntegration{
 
             }
 
-            error = integrateFunction( nodalPositions_e, nodalValues_e, answer_e );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error in the integration of element " + std::to_string( e ) );
-                result->addNext( error );
-                return result;
-
-            }
+            TARDIGRADE_ERROR_TOOLS_CATCH( integrateFunction( nodalPositions_e, nodalValues_e, answer_e ) );
 
             answer += answer_e;
 
         }
 
-        return NULL;
+        return;
 
     }
 

@@ -12,8 +12,6 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 
-typedef errorTools::Node errorNode; //!< Redefinition for the error node
-typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
 typedef asp::floatType floatType; //!< Redefinition of the float type
 typedef asp::floatVector floatVector; //!< Redefinition of a vector of floats
 typedef asp::floatMatrix floatMatrix; //!< Redefinition of a matrix of floats
@@ -1212,40 +1210,6 @@ namespace asp{
         };
 
     }
-
-}
-
-BOOST_AUTO_TEST_CASE( testSayHello ){
-    /*!
-     * Test message printed to stdout in sayHello function
-     */
-
-    //Setup redirect variables for stdout
-    std::stringbuf buffer;
-    cout_redirect rd(&buffer);
-    boost::test_tools::output_test_stream result;
-
-    //Initialize test variables
-    std::string message;
-    std::string answer;
-    errorOut error = NULL;
-
-    cout_redirect guard( result.rdbuf() );
-
-    //Check normal operation
-    message = "World!";
-    answer = "Hello World!\n";
-    error = asp::sayHello(message);
-    BOOST_CHECK( ! error );
-    BOOST_CHECK( result.is_equal( answer ) );
-
-    //Reset error code between tests
-    error = NULL;
-
-    //Check for "George" error
-    message = "George";
-    error = asp::sayHello(message);
-    BOOST_CHECK( error );
 
 }
 

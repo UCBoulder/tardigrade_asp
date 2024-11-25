@@ -12,7 +12,7 @@
 
 namespace tractionSeparation{
 
-    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                             const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
                                             floatVector &d ){
         /*!
@@ -61,11 +61,11 @@ namespace tractionSeparation{
 
         d = dx - xi_1 + xi_2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                             const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
                                             floatVector &d,
                                             floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
@@ -153,11 +153,11 @@ namespace tractionSeparation{
 
         d = dx - xi_1 + xi_2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                             const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
                                             floatVector &d,
                                             floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
@@ -277,11 +277,11 @@ namespace tractionSeparation{
 
         d = dx - xi_1 + xi_2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d ){
         /*!
@@ -343,11 +343,11 @@ namespace tractionSeparation{
 
         d = dx - xi_1 + xi_2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d,
                                      floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
@@ -470,11 +470,11 @@ namespace tractionSeparation{
 
         dddD    =  dxdX + vectorTools::dot( dxi_2dChi_2, dchi_2dX );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+    void computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d,
                                      floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
@@ -667,11 +667,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut decomposeVector( const floatVector &d, const floatVector &n,
+    void decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt ){
         /*!
          * Decompose a vector into a normal part and a tangential part via
@@ -686,19 +686,17 @@ namespace tractionSeparation{
          * \param &dt: The tangential part of the vector
          */
 
-        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ), "The normal vector isn't a unit vector!" );
 
         dn = vectorTools::dot( d, n ) * n;
 
         dt = d - dn;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut decomposeVector( const floatVector &d, const floatVector &n,
+    void decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt,
                               floatMatrix &ddndd, floatMatrix &ddndn,
                               floatMatrix &ddtdd, floatMatrix &ddtdn ){
@@ -719,9 +717,7 @@ namespace tractionSeparation{
          * \param &ddtdn: The derivative of the tangential part of the vector w.r.t. the normal vector
          */
 
-        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ), "The normal vector isn't a unit vector!" );
 
         dn = vectorTools::dot( d, n ) * n;
 
@@ -735,11 +731,11 @@ namespace tractionSeparation{
 
         ddtdn = -ddndn;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut decomposeVector( const floatVector &d, const floatVector &n,
+    void decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt,
                               floatMatrix &ddndd, floatMatrix &ddndn,
                               floatMatrix &ddtdd, floatMatrix &ddtdn,
@@ -770,9 +766,7 @@ namespace tractionSeparation{
          * \param &d2dtdndn: The second derivative of the tangential part of the vector w.r.t. the normal vector
          */
 
-        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ), "The normal vector isn't a unit vector!" );
 
         dn = vectorTools::dot( d, n ) * n;
 
@@ -815,11 +809,11 @@ namespace tractionSeparation{
         d2dtdddn = -d2dndddn;
         d2dtdndn = -d2dndndn;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                     const floatVector &parameters, floatVector &traction ){
         /*!
          * Compute the linear traction
@@ -832,11 +826,7 @@ namespace tractionSeparation{
          * \param &traction: The resulting traction
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -844,11 +834,11 @@ namespace tractionSeparation{
 
         traction = En * normalDeformationMeasure + Et * tangentialDeformationMeasure;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                     const floatVector &parameters, floatVector &traction,
                                     floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp ){
         /*!
@@ -865,11 +855,7 @@ namespace tractionSeparation{
          * \param &dtractiondp: The derivative of the traction w.r.t. the parameters
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -893,11 +879,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                     const floatVector &parameters, floatVector &traction,
                                     floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp,
                                     floatMatrix &d2tractionddndp, floatMatrix &d2tractionddtdp ){
@@ -917,11 +903,7 @@ namespace tractionSeparation{
          * \param &d2tractionddtdp: The second derivative of the traction w.r.t. the tangential deformation measure and the parameters
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -953,11 +935,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy ){
         /*!
          * Compute the linear traction-separation energy
@@ -970,11 +952,7 @@ namespace tractionSeparation{
          * \param &energy: The returned energy value \f$ e^t \f$
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -982,11 +960,11 @@ namespace tractionSeparation{
 
         energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt ){
         /*!
@@ -1002,11 +980,7 @@ namespace tractionSeparation{
          * \param &denergyddt: The derivative of the energy w.r.t. the tangential deformation measure
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -1018,11 +992,11 @@ namespace tractionSeparation{
 
         denergyddt = Et * tangentialDeformationMeasure;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt,
                                           floatVector &d2energyddnddn, floatVector &d2energyddnddt,
@@ -1043,11 +1017,7 @@ namespace tractionSeparation{
          * \param &d2energyddtddt: The second derivative of the energy w.r.t. the tangential deformation measure
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -1069,11 +1039,11 @@ namespace tractionSeparation{
 
         d2energyddtddt = Et * eye;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters ){
         /*!
@@ -1090,11 +1060,7 @@ namespace tractionSeparation{
          * \param &denergydParameters: The derivative of the energy w.r.t. the parameters
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -1109,10 +1075,10 @@ namespace tractionSeparation{
         denergydParameters = { 0.5 * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ),
                                0.5 * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) };
 
-        return NULL;
+        return;
     }
 
-    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+    void computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters,
                                           floatVector &d2energyddnddn, floatVector &d2energyddnddt, floatVector &d2energyddndParameters,
@@ -1138,11 +1104,7 @@ namespace tractionSeparation{
          * \param &d2energydParametersdParameters: The second derivative of the energy w.r.t. the parameters
          */
 
-        if ( parameters.size( ) != 2 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( parameters.size( ) == 2, "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
 
         floatType En = parameters[ 0 ];
 
@@ -1185,11 +1147,11 @@ namespace tractionSeparation{
 
         d2energydParametersdParameters = floatVector( parameters.size( ) * parameters.size( ), 0 );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan ){
+    void computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan ){
         /*!
          * Compute Nanson's relation
          * 
@@ -1202,11 +1164,7 @@ namespace tractionSeparation{
          * \param &dan: The mapping of \f$ dA N_I \f$ to the current configuration.
          */
 
-        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( deformationGradient.size( ) == ( dAN.size( ) * dAN.size( ) ), "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
 
         floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
 
@@ -1224,11 +1182,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+    void computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
                                      floatMatrix &ddandF, floatMatrix &ddanddAN ){
         /*!
          * Compute Nanson's relation
@@ -1244,11 +1202,7 @@ namespace tractionSeparation{
          * \param &ddanddAN: The gradient of the current surface area w.r.t. the reference surface area
          */
 
-        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( deformationGradient.size( ) == ( dAN.size( ) * dAN.size( ) ), "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
 
         floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
 
@@ -1282,11 +1236,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+    void computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
                                      floatMatrix &ddandF, floatMatrix &ddanddAN,
                                      floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN ){
         /*!
@@ -1305,11 +1259,7 @@ namespace tractionSeparation{
          * \param &d2dandFddAN: The second derivative of the current surface area w.r.t. the deformation gradient and reference surface area
          */
 
-        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( deformationGradient.size( ) == ( dAN.size( ) * dAN.size( ) ), "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
 
         floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
 
@@ -1362,11 +1312,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &overlap ){
         /*!
@@ -1397,17 +1347,9 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          */
 
-        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+        TARDIGRADE_ERROR_TOOLS_CHECK( chi.size( ) == ( Xi_1.size( ) * Xi_1.size( ) ), "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
-
-        }
-
-        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( gradChi.size( ) == ( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ), "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
 
         // Compute the non-local micro-deformation tensor
         floatVector chi_nl = chi;
@@ -1426,13 +1368,13 @@ namespace tractionSeparation{
 
         }
 
-        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
                                      floatVector &overlap ){
         /*!
@@ -1464,23 +1406,11 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          */
 
-        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+        TARDIGRADE_ERROR_TOOLS_CHECK( chi.size( ) == ( Xi_1.size( ) * Xi_1.size( ) ), "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+        TARDIGRADE_ERROR_TOOLS_CHECK( chi_nl_basis.size( ) == ( Xi_1.size( ) * Xi_1.size( ) ), "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
 
-        }
-
-        if ( chi_nl_basis.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi_nl_basis.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
-
-        }
-
-        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( gradChi.size( ) == ( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ), "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
 
         // Compute the non-local micro-deformation tensor
         floatVector chi_nl = chi_nl_basis;
@@ -1499,13 +1429,13 @@ namespace tractionSeparation{
 
         }
 
-        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
+        TARDIGRADE_ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                            const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                            floatVector &overlap ){
         /*!
@@ -1536,29 +1466,13 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          */
 
-        if ( Xi_1.size( ) != dX.size( ) ){
+        TARDIGRADE_ERROR_TOOLS_CHECK( Xi_1.size( ) == dX.size( ), "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
+        TARDIGRADE_ERROR_TOOLS_CHECK( F.size( ) == ( dX.size( ) * dX.size( ) ), "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
 
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( chi.size( ) == ( Xi_1.size( ) * Xi_1.size( ) ), "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
 
-        if ( F.size( ) != dX.size( ) * dX.size( ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
-
-        }
-
-        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
-
-        }
-
-        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( chi_nl.size( ) == ( Xi_1.size( ) * Xi_1.size( ) ), "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
 
         // Compute the current configuration local relative position vector and inter-particle spacing
         floatVector xi_1( Xi_1.size( ), 0 );
@@ -1588,11 +1502,7 @@ namespace tractionSeparation{
         floatVector xi_t = xi_1 - dx;
 
         // Compute the inverse of the non-local micro-deformation tensor
-        if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
-
-        }
+        TARDIGRADE_ERROR_TOOLS_CHECK( tardigradeVectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) > 0, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
 
         floatVector inv_chi_nl = vectorTools::inverse( chi_nl, xi_t.size( ), Xi_1.size( ) );
 
@@ -1615,15 +1525,15 @@ namespace tractionSeparation{
         }
         else{
 
-            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap ) );
+            TARDIGRADE_ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap ) );
 
         }
 
-        return NULL;
+        return;
 
     }
     
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -1726,11 +1636,11 @@ namespace tractionSeparation{
 
         dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -1837,11 +1747,11 @@ namespace tractionSeparation{
 
         dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                            const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                            floatVector &overlap,
                                            floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -2021,11 +1931,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -2384,11 +2294,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -2742,11 +2652,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                            const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                            floatVector &overlap,
                                            floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -3234,11 +3144,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -4282,11 +4192,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
                                      floatVector &overlap,
                                      floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -5400,11 +5310,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+    void computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                            const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                            floatVector &overlap,
                                            floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
@@ -6448,11 +6358,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L ){
+    void computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L ){
         /*!
          * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
          * is overlapping it's non-local neighbor.
@@ -6496,11 +6406,11 @@ namespace tractionSeparation{
         
         L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+    void computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
                                                floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl ){
         /*!
          * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
@@ -6573,11 +6483,11 @@ namespace tractionSeparation{
 
         dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+    void computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
                                                floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
                                                floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
                                                floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
@@ -6715,11 +6625,11 @@ namespace tractionSeparation{
 
         d2LdXdR_nl[ X.size( ) - 1 ] = 2 * R_nl;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+    void computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
                                                floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
                                                floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
                                                floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
@@ -6912,11 +6822,11 @@ namespace tractionSeparation{
 
         d3LdXdR_nldR_nl[ X.size( ) - 1 ] = 2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+    void computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
                                                floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
                                                floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
                                                floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
@@ -7123,11 +7033,11 @@ namespace tractionSeparation{
 
         d3LdXdR_nldR_nl[ X.size( ) - 1 ] = 2;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+    void solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
         /*!
@@ -7257,11 +7167,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+    void solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
@@ -7474,11 +7384,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+    void solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
@@ -7962,11 +7872,11 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+    void solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
@@ -8895,7 +8805,7 @@ namespace tractionSeparation{
 
         }
 
-        return NULL;
+        return;
 
     }
 

@@ -55,8 +55,6 @@ namespace asp{
     const std::string __BASENAME__ = file_name(__FILE__);
     const std::string __FILENAME__ = __BASENAME__.substr(0, __BASENAME__.find_last_of("."));
 
-    typedef errorTools::Node errorNode; //!< Redefinition for the error node
-    typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
     typedef double floatType; //!< Define the float values type.
     typedef std::vector< floatType > floatVector; //!< Define a vector of floats
     typedef std::vector< std::vector< floatType > > floatMatrix; //!< Define a matrix of floats
@@ -68,7 +66,7 @@ namespace asp{
 
     /// Say hello
     /// @param message The message to print
-    errorOut sayHello(std::string message);
+    void sayHello(std::string message);
 
     void abaqusInterface( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
                           double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
@@ -79,7 +77,7 @@ namespace asp{
                           const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
                           const int *JSTEP,     const int &KINC );
 
-    errorOut dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
+    void dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
                              floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
                              const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
                              const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,

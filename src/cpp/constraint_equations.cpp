@@ -3,7 +3,7 @@
 
 namespace constraintEquations{
 
-    errorOut tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C ){
+    void tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C ){
         /*!
          * Compute the traction constraint where
          * 
@@ -31,12 +31,12 @@ namespace constraintEquations{
 
         C = P * vectorTools::dot( error, error );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C,
-                                 floatVector &dCdCauchyStress, floatVector &dCdNormal, floatVector &dCdTraction, floatType &dCdP ){
+    void tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C,
+                             floatVector &dCdCauchyStress, floatVector &dCdNormal, floatVector &dCdTraction, floatType &dCdP ){
         /*!
          * Compute the traction constraint where
          * 
@@ -93,14 +93,14 @@ namespace constraintEquations{
 
         dCdP = vectorTools::dot( error, error );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C,
-                                 floatVector &dCdCauchyStress, floatVector &dCdNormal, floatVector &dCdTraction, floatType &dCdP,
-                                 floatVector &d2CdCauchyStressdNormal, floatVector &d2CdCauchyStressdP,
-                                 floatVector &d2CdNormaldP,            floatVector &d2CdTractiondP ){
+    void tractionConstraint( const floatVector &cauchyStress, const floatVector &n, const floatVector &traction, const floatType &P, floatType &C,
+                             floatVector &dCdCauchyStress, floatVector &dCdNormal, floatVector &dCdTraction, floatType &dCdP,
+                             floatVector &d2CdCauchyStressdNormal, floatVector &d2CdCauchyStressdP,
+                             floatVector &d2CdNormaldP,            floatVector &d2CdTractiondP ){
         /*!
          * Compute the traction constraint where
          * 
@@ -187,7 +187,7 @@ namespace constraintEquations{
 
         dCdTraction = P * d2CdTractiondP;
 
-        return NULL;
+        return;
 
     }
 
